@@ -12,7 +12,31 @@ export default function TabLayout() {
                 options={{
                     title: "Home",
                     tabBarIcon: ({ color, focused }) => (
-                        <Ionicons name={focused ? "home-sharp" : "home-outline"} color={color} size={24} />
+                        <Ionicons name={focused ? "home" : "home-outline"} color={color} size={24} />
+                    ),
+                }}
+            />
+            <Tabs.Screen name="consultations"
+                options={{
+                    title: "Consultas",
+                    tabBarIcon: ({ color, focused }) => (
+                        <Ionicons name={focused ? "calendar" : "calendar-outline"} color={color} size={24} />
+                    ),
+                }}
+            />
+            <Tabs.Screen name="history"
+                options={{
+                    title: "Histórico",
+                    tabBarIcon: ({ color, focused }) => (
+                        <Ionicons name={focused ? "time" : "time-outline"} color={color} size={24} />
+                    ),
+                }}
+            />
+            <Tabs.Screen name="profile"
+                options={{
+                    title: "Perfil",
+                    tabBarIcon: ({ color, focused }) => (
+                        <Ionicons name={focused ? "person" : "person-outline"} color={color} size={24} />
                     ),
                 }}
             />
