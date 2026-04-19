@@ -1,6 +1,7 @@
 import { Tabs } from "expo-router";
 import Ionicons from "@expo/vector-icons/Ionicons";
-import { useColorScheme, View } from "react-native";
+import { View } from "react-native";
+import { Colors, useColors } from "@/hooks/useColors";
 
 function tab(
     name: string,
@@ -25,42 +26,43 @@ function tab(
     );
 }
 
-const header = () => (
-    <View style={{
-        paddingTop: 45,
-        paddingLeft: 15,
-        flexDirection: "row",
-        alignItems: "center",
-        justifyContent: "space-between",
-    }}>
-        <Ionicons name="person-circle-outline" size={32} color="#65645F" />
-    </View>
+// TODO: change icon to be the actual user profile picture
+const header = (colors: Colors) => (
+        <View style={{
+            paddingTop: 45,
+            paddingLeft: 15,
+            flexDirection: "row",
+            alignItems: "center",
+            justifyContent: "space-between",
+        }}>
+            <Ionicons name="person-circle-outline" size={32} color={colors.tabInactive} />
+        </View>
 );
 
 export default function TabLayout() {
-    const scheme = useColorScheme();
-    const isDark = scheme === "dark";
+    const colors = useColors();
     
     return (
         <Tabs
             screenOptions={{
-                tabBarActiveTintColor: "#68C5DB",
-                header: header,
+                tabBarActiveTintColor: colors.tabActive,
+                header: () => header(colors),
+
                 tabBarStyle: {
-                    backgroundColor: isDark ? "#1C1C1E" : "#FFFFFF",
+                    backgroundColor: colors.background,
                     borderTopWidth: 0,
                     elevation: 0, // Android shadow
                     shadowOpacity: 0, // iOS shadow
                 },
+
                 sceneStyle: {
-                    backgroundColor: isDark ? "#1C1C1E" : "#FFFFFF",
+                    backgroundColor: colors.background,
                 },
-            }}
-        >
-            {tab("index", "Home", "home")}
-            {tab("consultations", "Consultas", "calendar")}
-            {tab("history", "Histórico", "time")}
-            {tab("profile", "Perfil", "person")}
+            }}>
+            { tab("index", "Home", "home") }
+            { tab("consultations", "Consultas", "calendar") }
+            { tab("history", "Histórico", "time") }
+            { tab("profile", "Perfil", "person") }
         </Tabs>
     );
 }
