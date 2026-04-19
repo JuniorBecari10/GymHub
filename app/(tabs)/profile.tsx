@@ -1,9 +1,12 @@
+import { useColors } from "@/hooks/useColors";
 import { Text, View } from "react-native";
 
-export default function Profile() {
+export default function Index() {
+    const colors = useColors();
+    
     return (
-        <View className="flex-1 items-center justify-center">
-            <Text className="bg-red-500">Perfil</Text>
+        <View style={{ flex: 1, flexDirection: "column", alignItems: "center" }}>
+            <Text style={{ color: colors.text }}>Perfil</Text>
         </View>
     );
 }

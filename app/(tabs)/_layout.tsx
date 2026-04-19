@@ -48,7 +48,7 @@ export default function TabLayout() {
                 header: header,
                 tabBarStyle: {
                     backgroundColor: isDark ? "#1C1C1E" : "#FFFFFF",
-                    // borderTopWidth: 0,
+                    borderTopWidth: 0,
                     elevation: 0, // Android shadow
                     shadowOpacity: 0, // iOS shadow
                 },
