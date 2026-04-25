@@ -1,11 +1,11 @@
 {
   "expo": {
-    "name": "gymhub",
-    "slug": "gymhub",
+    "name": "healthlen",
+    "slug": "healthlen",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
-    "scheme": "gymhub",
+    "scheme": "healthlen",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "ios": {

@@ -2,6 +2,7 @@ import { Tabs } from "expo-router";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { View } from "react-native";
 import { Colors, useColors } from "@/hooks/useColors";
+import { EdgeInsets, useSafeAreaInsets } from "react-native-safe-area-context";
 
 function tab(
     name: string,
@@ -27,10 +28,10 @@ function tab(
 }
 
 // TODO: change icon to be the actual user profile picture
-const header = (colors: Colors) => (
+const header = (colors: Colors, insets: EdgeInsets) => (
         <View style={{
-            paddingTop: 45,
-            paddingLeft: 15,
+            paddingTop: insets.top + 10,
+            paddingLeft: 10,
             flexDirection: "row",
             alignItems: "center",
             justifyContent: "space-between",
@@ -41,12 +42,12 @@ const header = (colors: Colors) => (
 
 export default function TabLayout() {
     const colors = useColors();
-    
+
     return (
         <Tabs
             screenOptions={{
                 tabBarActiveTintColor: colors.tabActive,
-                header: () => header(colors),
+                header: () => header(colors, useSafeAreaInsets()),
 
                 tabBarStyle: {
                     backgroundColor: colors.background,
