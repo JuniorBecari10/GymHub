@@ -1,7 +1,7 @@
 import { useColors } from "@/hooks/useColors";
 import { Text, View } from "react-native";
 
-export default function Index() {
+export default function Profile() {
     const colors = useColors();
     
     return (

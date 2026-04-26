@@ -68,7 +68,7 @@ export default function TabLayout() {
                 },
             }}>
             { tab("home", "Home", "home") }
-            { tab("consultations", "Consultas", "calendar") }
+            { tab("schedule", "Agenda", "calendar") }
             { tab("history", "Histórico", "time") }
             { tab("profile", "Perfil", "person") }
         </Tabs>

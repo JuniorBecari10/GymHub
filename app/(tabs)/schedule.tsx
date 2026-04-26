@@ -1,12 +1,12 @@
 import { useColors } from "@/hooks/useColors";
 import { Text, View } from "react-native";
 
-export default function Index() {
+export default function Schedule() {
     const colors = useColors();
     
     return (
         <View style={{ flex: 1, flexDirection: "column", alignItems: "center" }}>
-            <Text style={{ color: colors.text }}>Consultas</Text>
+            <Text style={{ color: colors.text }}>Agenda</Text>
         </View>
     );
 }
