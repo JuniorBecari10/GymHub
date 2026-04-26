@@ -2,13 +2,16 @@ import { Tabs } from "expo-router";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { View } from "react-native";
 import { Colors, useColors } from "@/hooks/useColors";
-import { EdgeInsets, useSafeAreaInsets } from "react-native-safe-area-context";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { ComponentProps } from "react";
+
+type IoniconsName = ComponentProps<typeof Ionicons>["name"];
 
 function tab(
     name: string,
     title: string,
-    icon: unknown, // sorry :(
-    iconOutline: any = `${icon}-outline` // optional. set this only if the default value isn't valid.
+    icon: IoniconsName,
+    iconOutline: IoniconsName = `${icon}-outline` as IoniconsName
 ) {
     return (
         <Tabs.Screen
@@ -28,7 +31,10 @@ function tab(
 }
 
 // TODO: change icon to be the actual user profile picture
-const header = (colors: Colors, insets: EdgeInsets) => (
+function AppHeader({ colors }: { colors: Colors }) {
+    const insets = useSafeAreaInsets();
+
+    return (
         <View style={{
             paddingTop: insets.top + 10,
             paddingLeft: 10,
@@ -38,7 +44,8 @@ const header = (colors: Colors, insets: EdgeInsets) => (
         }}>
             <Ionicons name="person-circle-outline" size={32} color={colors.tabInactive} />
         </View>
-);
+    );
+}
 
 export default function TabLayout() {
     const colors = useColors();
@@ -47,7 +54,7 @@ export default function TabLayout() {
         <Tabs
             screenOptions={{
                 tabBarActiveTintColor: colors.tabActive,
-                header: () => header(colors, useSafeAreaInsets()),
+                header: () => <AppHeader colors={colors} />,
 
                 tabBarStyle: {
                     backgroundColor: colors.background,
@@ -60,7 +67,7 @@ export default function TabLayout() {
                     backgroundColor: colors.background,
                 },
             }}>
-            { tab("index", "Home", "home") }
+            { tab("home", "Home", "home") }
             { tab("consultations", "Consultas", "calendar") }
             { tab("history", "Histórico", "time") }
             { tab("profile", "Perfil", "person") }

@@ -1,9 +1,11 @@
 import { View, Image, StyleSheet } from "react-native";
 import { useEffect } from "react";
 import { useRouter } from "expo-router";
+import { useColors } from "@/hooks/useColors";
 
 export default function Splash() {
     const router = useRouter();
+    const colors = useColors();
 
     useEffect(() => {
         const timeout = setTimeout(() => {
@@ -14,7 +16,12 @@ export default function Splash() {
     }, []);
 
     return (
-        <View style={styles.container}>
+        <View style={{
+            flex: 1,
+            backgroundColor: colors.background,
+            alignItems: "center",
+            justifyContent: "center",
+        }}>
             <Image
                 source={require("../assets/logo.png")}
                 style={styles.image}
@@ -25,14 +32,8 @@ export default function Splash() {
 }
 
 const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        backgroundColor: "#f8e8d5",
-        alignItems: "center",
-        justifyContent: "center",
-    },
     image: {
-        width: 200,
-        height: 200,
+        width: 100,
+        height: 100,
     },
 });
