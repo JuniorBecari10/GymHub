@@ -13,7 +13,7 @@ import Ionicons from "@expo/vector-icons/Ionicons";
 import { useRouter } from "expo-router";
 import { useFocusEffect } from "@react-navigation/native";
 import { useColors } from "@/hooks/useColors";
-import { User, getSession, logout } from "@/lib/auth";
+import { User, getSession, logout, updateSession } from "@/lib/auth";
 
 export default function Profile() {
     const colors = useColors();
@@ -45,8 +45,11 @@ export default function Profile() {
             .toUpperCase();
     }
 
-    function handleSave() {
-        if (user) setUser({ ...user, fullName: name, email });
+    async function handleSave() {
+        if (!user) return;
+        const updated = { ...user, fullName: name, email };
+        await updateSession(updated);
+        setUser(updated);
         setEditing(false);
     }
 

@@ -99,13 +99,13 @@ function confirmDelete(name: string, onConfirm: () => void) {
 function AppHeader({ colors }: { colors: Colors }) {
     const insets = useSafeAreaInsets();
 
-    const [patients, setPatients]       = useState<Patient[]>([]);
-    const [selected, setSelected]       = useState<Patient | null>(null);
+    const [patients, setPatients] = useState<Patient[]>([]);
+    const [selected, setSelected] = useState<Patient | null>(null);
     const [selectorOpen, setSelectorOpen] = useState(false);
-    const [addOpen, setAddOpen]         = useState(false);
-    const [editing, setEditing]         = useState<Patient | null>(null);
+    const [addOpen, setAddOpen] = useState(false);
+    const [editing, setEditing] = useState<Patient | null>(null);
 
-    const [newName, setNewName]         = useState("");
+    const [newName, setNewName] = useState("");
     const [newRelation, setNewRelation] = useState("");
 
     useEffect(() => {
@@ -210,7 +210,7 @@ function AppHeader({ colors }: { colors: Colors }) {
                         <Avatar patient={selected} size={24} />
                     )}
 
-                    <View style={{ flex: 1 }}>
+                    <View style={{ flexShrink: 1 }}>
                         {selected ? (
                             <Text
                                 style={[styles.patientName, { color: colors.text }]}
@@ -278,10 +278,6 @@ function AppHeader({ colors }: { colors: Colors }) {
                                             {item.relation}
                                         </Text>
                                     </View>
-
-                                    {selected?.id === item.id && (
-                                        <Ionicons name="checkmark" size={18} color="#085041" style={{ marginRight: 4 }} />
-                                    )}
 
                                     <TouchableOpacity
                                         onPress={() => openEdit(item)}
@@ -417,10 +413,10 @@ const styles = StyleSheet.create({
         paddingHorizontal: 12,
         paddingVertical: 6,
         gap: 8,
-        maxWidth: 240,
-        minWidth: 160,
+        alignSelf: "flex-start",
+        maxWidth: "90%",
     },
-    patientName:  { fontSize: 14, fontWeight: "500" },
+    patientName: { fontSize: 14, fontWeight: "500" },
     patientEmpty: { fontSize: 13 },
     overlay: {
         ...StyleSheet.absoluteFillObject,
@@ -444,8 +440,8 @@ const styles = StyleSheet.create({
         alignSelf: "center",
         marginBottom: 8,
     },
-    sheetTitle:  { fontSize: 17, fontWeight: "500", marginBottom: 4 },
-    emptyText:   { fontSize: 14, textAlign: "center", paddingVertical: 24 },
+    sheetTitle: { fontSize: 17, fontWeight: "500", marginBottom: 4 },
+    emptyText: { fontSize: 14, textAlign: "center", paddingVertical: 24 },
     patientRow: {
         flexDirection: "row",
         alignItems: "center",
@@ -454,7 +450,7 @@ const styles = StyleSheet.create({
         paddingHorizontal: 8,
         borderBottomWidth: 1,
     },
-    rowName:     { fontSize: 14, fontWeight: "500" },
+    rowName: { fontSize: 14, fontWeight: "500" },
     rowRelation: { fontSize: 12 },
     rowAction: {
         width: 30, height: 30,
@@ -473,9 +469,9 @@ const styles = StyleSheet.create({
         padding: 13,
         marginTop: 4,
     },
-    addBtnText:    { fontSize: 14, fontWeight: "500" },
-    inputLabel:    { fontSize: 12, textTransform: "uppercase", letterSpacing: 0.05, marginBottom: 4 },
-    input:         { borderWidth: 1, borderRadius: 10, padding: 12, fontSize: 15, marginBottom: 4 },
+    addBtnText: { fontSize: 14, fontWeight: "500" },
+    inputLabel: { fontSize: 12, textTransform: "uppercase", letterSpacing: 0.05, marginBottom: 4 },
+    input: { borderWidth: 1, borderRadius: 10, padding: 12, fontSize: 15, marginBottom: 4 },
     cancelBtn: {
         flex: 1, padding: 13,
         borderWidth: 1, borderRadius: 12,

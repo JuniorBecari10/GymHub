@@ -134,3 +134,15 @@ export type Patient = {
     name: string;
     relation: string;
 };
+
+export async function updateSession(updates: Partial<User>): Promise<void> {
+    const current = await getSession();
+    if (!current) return;
+    const updated = { ...current, ...updates };
+    await setItem(SESSION_KEY, JSON.stringify(updated));
+
+    // atualiza também na lista de users
+    const users = await getUsers();
+    const updatedUsers = users.map((u) => u.id === updated.id ? updated : u);
+    await saveUsers(updatedUsers);
+}
