@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { Text, TextInput, TouchableOpacity, StyleSheet, ScrollView } from "react-native";
-import { supabase } from "@/lib/supabase";
-import { useColors } from "@/hooks/useColors";
 import { useRouter } from "expo-router";
+import { register } from "@/lib/auth";
+import { useColors } from "@/hooks/useColors";
 
 export default function Register() {
     const colors = useColors();
@@ -14,56 +14,22 @@ export default function Register() {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState("");
 
-    async function signUp() {
+    async function handleRegister() {
         setError("");
 
-        if (!fullName.trim()) {
-            setError("Informe seu nome completo.");
-            return;
-        }
-        if (!email.trim()) {
-            setError("Informe seu email.");
-            return;
-        }
-        if (password.length < 6) {
-            setError("A senha deve ter pelo menos 6 caracteres.");
-            return;
-        }
-        if (password !== confirmPassword) {
-            setError("As senhas não coincidem.");
-            return;
-        }
+        if (!fullName.trim()) { setError("Informe seu nome completo."); return; }
+        if (!email.trim())    { setError("Informe seu email."); return; }
+        if (password.length < 6) { setError("A senha deve ter pelo menos 6 caracteres."); return; }
+        if (password !== confirmPassword) { setError("As senhas não coincidem."); return; }
 
         setLoading(true);
-
-        const { data, error: signUpError } = await supabase.auth.signUp({
-            email,
-            password,
-            options: {
-                data: { full_name: fullName },
-            },
-        });
-
-        if (signUpError) {
-            setError(signUpError.message);
+        const { error } = await register(fullName, email, password);
+        if (error) {
+            setError(error);
             setLoading(false);
             return;
         }
-
-        // insert into public.users to store full_name
-        if (data.user) {
-            const { error: insertError } = await supabase
-                .from("users")
-                .insert({ id: data.user.id, email, full_name: fullName });
-
-            if (insertError) {
-                setError(insertError.message);
-                setLoading(false);
-                return;
-            }
-        }
-
-        setLoading(false);
+        router.replace("/(tabs)/home");
     }
 
     return (
@@ -71,13 +37,13 @@ export default function Register() {
             contentContainerStyle={[styles.container, { backgroundColor: colors.background }]}
             keyboardShouldPersistTaps="handled"
         >
-            <TouchableOpacity onPress={() => router.back()} style={styles.backButton}>
-                <Text style={[styles.backText, { color: colors.teal }]}>‹ Voltar</Text>
+            <TouchableOpacity onPress={() => router.back()}>
+                <Text style={[styles.back, { color: colors.teal }]}>‹ Voltar</Text>
             </TouchableOpacity>
 
             <Text style={[styles.title, { color: colors.text }]}>Criar conta</Text>
             <Text style={[styles.subtitle, { color: colors.textMuted }]}>
-                Crie sua conta para começar a usar o Healthlen.
+                Preencha os dados para criar sua conta.
             </Text>
 
             {error ? <Text style={styles.error}>{error}</Text> : null}
@@ -85,7 +51,7 @@ export default function Register() {
             <Text style={[styles.label, { color: colors.textMuted }]}>Nome completo</Text>
             <TextInput
                 style={[styles.input, { color: colors.text, borderColor: colors.border, backgroundColor: colors.surface }]}
-                placeholder="Maria Aparecida"
+                placeholder="Seu nome completo"
                 placeholderTextColor={colors.textMuted}
                 value={fullName}
                 onChangeText={setFullName}
@@ -124,8 +90,8 @@ export default function Register() {
             />
 
             <TouchableOpacity
-                style={[styles.button, { backgroundColor: colors.teal }, loading && styles.buttonDisabled]}
-                onPress={signUp}
+                style={[styles.button, { backgroundColor: colors.teal }, loading && styles.disabled]}
+                onPress={handleRegister}
                 disabled={loading}
             >
                 <Text style={styles.buttonText}>{loading ? "Criando conta..." : "Criar conta"}</Text>
@@ -135,15 +101,14 @@ export default function Register() {
 }
 
 const styles = StyleSheet.create({
-    container: { flexGrow: 1, padding: 32, paddingTop: 64, gap: 8 },
-    backButton: { marginBottom: 16 },
-    backText: { fontSize: 16 },
-    title: { fontSize: 28, fontWeight: "500", marginBottom: 4 },
-    subtitle: { fontSize: 14, marginBottom: 16 },
-    label: { fontSize: 13, marginBottom: 4, marginTop: 8 },
-    input: { borderWidth: 1, borderRadius: 10, padding: 12, fontSize: 16 },
-    button: { padding: 14, borderRadius: 10, alignItems: "center", marginTop: 24 },
-    buttonDisabled: { opacity: 0.6 },
+    container:  { flexGrow: 1, padding: 32, paddingTop: 64, gap: 8 },
+    back:       { fontSize: 16, marginBottom: 16 },
+    title:      { fontSize: 28, fontWeight: "500", marginBottom: 4 },
+    subtitle:   { fontSize: 14, marginBottom: 12 },
+    label:      { fontSize: 13, marginBottom: 4, marginTop: 8 },
+    input:      { borderWidth: 1, borderRadius: 10, padding: 12, fontSize: 16 },
+    button:     { padding: 14, borderRadius: 10, alignItems: "center", marginTop: 24 },
+    disabled:   { opacity: 0.6 },
     buttonText: { color: "white", fontSize: 16, fontWeight: "500" },
-    error: { color: "#E24B4A", fontSize: 13, marginBottom: 8 },
+    error:      { color: "#E24B4A", fontSize: 13 },
 });
