@@ -271,10 +271,10 @@ function AppHeader({ colors }: { colors: Colors }) {
                                     <Avatar patient={item} size={38} />
 
                                     <View style={{ flex: 1 }}>
-                                        <Text style={[styles.rowName, { color: colors.text }]}>
+                                        <Text style={[styles.rowName, { color: colors.text }]} numberOfLines={1} ellipsizeMode="tail">
                                             {item.name}
                                         </Text>
-                                        <Text style={[styles.rowRelation, { color: colors.textMuted }]}>
+                                        <Text style={[styles.rowRelation, { color: colors.textMuted }]} numberOfLines={1} ellipsizeMode="tail">
                                             {item.relation}
                                         </Text>
                                     </View>
@@ -356,7 +356,7 @@ function AppHeader({ colors }: { colors: Colors }) {
                             style={[styles.cancelBtn, { borderColor: colors.border }]}
                             onPress={() => setAddOpen(false)}
                         >
-                            <Text style={[styles.cancelBtnText, { color: colors.textMuted }]}>
+                            <Text style={[styles.cancelBtnText, { color: colors.text }]}>
                                 Cancelar
                             </Text>
                         </TouchableOpacity>
