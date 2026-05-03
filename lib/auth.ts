@@ -103,3 +103,34 @@ export async function getSession(): Promise<User | null> {
     const raw = await getItem(SESSION_KEY);
     return raw ? JSON.parse(raw) : null;
 }
+
+const PATIENTS_KEY = "healthlen_patients";
+const SELECTED_PATIENT_KEY = "healthlen_selected_patient";
+
+export async function getPatients(): Promise<Patient[]> {
+    const raw = await getItem(PATIENTS_KEY);
+    return raw ? JSON.parse(raw) : [];
+}
+
+export async function savePatients(patients: Patient[]): Promise<void> {
+    await setItem(PATIENTS_KEY, JSON.stringify(patients));
+}
+
+export async function getSelectedPatient(): Promise<Patient | null> {
+    const raw = await getItem(SELECTED_PATIENT_KEY);
+    return raw ? JSON.parse(raw) : null;
+}
+
+export async function saveSelectedPatient(patient: Patient | null): Promise<void> {
+    if (patient) {
+        await setItem(SELECTED_PATIENT_KEY, JSON.stringify(patient));
+    } else {
+        await removeItem(SELECTED_PATIENT_KEY);
+    }
+}
+
+export type Patient = {
+    id: string;
+    name: string;
+    relation: string;
+};
