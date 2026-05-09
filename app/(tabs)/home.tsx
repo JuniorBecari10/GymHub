@@ -343,7 +343,7 @@ export default function Home() {
                 ) : (
                     <View style={[styles.highlightCard, styles.highlightEmpty]}>
                         <Ionicons name="checkmark-circle" size={22} color="#9FE1CB" />
-                        <Text style={styles.highlightTitle}>Nenhum medicamento pendente</Text>
+                        <Text style={styles.highlightTitle}>Nenhum medicamento pendente.</Text>
                     </View>
                 )}
 
@@ -526,7 +526,7 @@ const styles = StyleSheet.create({
     },
     highlightLabel: { fontSize: 12, color: "#9FE1CB", flex: 1 },
     highlightTime: { fontSize: 12, color: "#9FE1CB", fontWeight: "500" },
-    highlightTitle: { fontSize: 20, fontWeight: "500", color: "#E1F5EE", letterSpacing: -0.3 },
+    highlightTitle: { fontSize: 16, fontWeight: "500", color: "#E1F5EE", letterSpacing: -0.3 },
     highlightSub: { fontSize: 13, color: "#9FE1CB" },
 
     // appt highlight card
