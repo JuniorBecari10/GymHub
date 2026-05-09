@@ -71,7 +71,7 @@ export default function Login() {
 
 const styles = StyleSheet.create({
     container:  { flex: 1, justifyContent: "center", padding: 32, gap: 10 },
-    title:      { fontSize: 32, fontWeight: "500", marginBottom: 4 },
+    title:      { fontSize: 28, fontWeight: "500", marginBottom: 4 },
     subtitle:   { fontSize: 14, marginBottom: 12 },
     label:      { fontSize: 13, marginBottom: 4, marginTop: 8 },
     input:      { borderWidth: 1, borderRadius: 10, padding: 12, fontSize: 16 },

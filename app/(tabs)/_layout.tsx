@@ -23,6 +23,7 @@ import {
     getSelectedPatient,
     saveSelectedPatient,
 } from "@/lib/auth";
+import { PatientProvider } from "@/context/PatientContext";
 
 type IoniconsName = ComponentProps<typeof Ionicons>["name"];
 
@@ -381,26 +382,28 @@ export default function TabLayout() {
     const colors = useColors();
 
     return (
-        <Tabs
-            screenOptions={{
-                tabBarActiveTintColor: colors.tabActive,
-                header: () => <AppHeader colors={colors} />,
-                tabBarStyle: {
-                    backgroundColor: colors.background,
-                    borderTopWidth: 0,
-                    elevation: 0,
-                    shadowOpacity: 0,
-                },
-                sceneStyle: {
-                    backgroundColor: colors.background,
-                },
-            }}
-        >
-            {tab("home", "Home", "home")}
-            {tab("schedule", "Agenda", "calendar")}
-            {tab("history", "Histórico", "time")}
-            {tab("profile", "Perfil", "person")}
-        </Tabs>
+        <PatientProvider>
+            <Tabs
+                screenOptions={{
+                    tabBarActiveTintColor: colors.tabActive,
+                    header: () => <AppHeader colors={colors} />,
+                    tabBarStyle: {
+                        backgroundColor: colors.background,
+                        borderTopWidth: 0,
+                        elevation: 0,
+                        shadowOpacity: 0,
+                    },
+                    sceneStyle: {
+                        backgroundColor: colors.background,
+                    },
+                }}
+            >
+                {tab("home", "Home", "home")}
+                {tab("schedule", "Agenda", "calendar")}
+                {tab("history", "Histórico", "time")}
+                {tab("profile", "Perfil", "person")}
+            </Tabs>
+        </PatientProvider>
     );
 }
 
