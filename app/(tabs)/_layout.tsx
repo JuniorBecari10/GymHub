@@ -23,7 +23,7 @@ import {
     getSelectedPatient,
     saveSelectedPatient,
 } from "@/lib/auth";
-import { PatientProvider } from "@/context/PatientContext";
+import { PatientProvider, usePatients } from "@/context/PatientContext";
 
 type IoniconsName = ComponentProps<typeof Ionicons>["name"];
 
@@ -99,41 +99,26 @@ function confirmDelete(name: string, onConfirm: () => void) {
 
 function AppHeader({ colors }: { colors: Colors }) {
     const insets = useSafeAreaInsets();
+    const { patients, selected, setSelected, addPatient, updatePatient, deletePatient } = usePatients();
 
-    const [patients, setPatients] = useState<Patient[]>([]);
-    const [selected, setSelected] = useState<Patient | null>(null);
     const [selectorOpen, setSelectorOpen] = useState(false);
-    const [addOpen, setAddOpen] = useState(false);
-    const [editing, setEditing] = useState<Patient | null>(null);
-
-    const [newName, setNewName] = useState("");
-    const [newRelation, setNewRelation] = useState("");
-
-    useEffect(() => {
-        getPatients().then(setPatients);
-        getSelectedPatient().then(setSelected);
-    }, []);
+    const [addOpen, setAddOpen]           = useState(false);
+    const [editing, setEditing]           = useState<Patient | null>(null);
+    const [newName, setNewName]           = useState("");
+    const [newRelation, setNewRelation]   = useState("");
 
     async function handleSelect(patient: Patient) {
-        setSelected(patient);
-        await saveSelectedPatient(patient);
+        await setSelected(patient);
         setSelectorOpen(false);
     }
 
     async function handleAdd() {
         if (!newName.trim()) return;
-
-        const patient: Patient = {
+        await addPatient({
             id: Date.now().toString(),
             name: newName.trim(),
             relation: newRelation.trim() || "Paciente",
-        };
-
-        const updated = [...patients, patient];
-        setPatients(updated);
-        await savePatients(updated);
-        setSelected(patient);
-        await saveSelectedPatient(patient);
+        });
         setNewName("");
         setNewRelation("");
         setAddOpen(false);
@@ -141,21 +126,11 @@ function AppHeader({ colors }: { colors: Colors }) {
 
     async function handleSaveEdit() {
         if (!editing || !newName.trim()) return;
-
-        const updated = patients.map((p) =>
-            p.id === editing.id
-                ? { ...p, name: newName.trim(), relation: newRelation.trim() || "Paciente" }
-                : p
-        );
-        setPatients(updated);
-        await savePatients(updated);
-
-        if (selected?.id === editing.id) {
-            const updatedPatient = updated.find((p) => p.id === editing.id)!;
-            setSelected(updatedPatient);
-            await saveSelectedPatient(updatedPatient);
-        }
-
+        await updatePatient({
+            ...editing,
+            name: newName.trim(),
+            relation: newRelation.trim() || "Paciente",
+        });
         setEditing(null);
         setNewName("");
         setNewRelation("");
@@ -163,17 +138,7 @@ function AppHeader({ colors }: { colors: Colors }) {
     }
 
     async function handleDelete(patient: Patient) {
-        confirmDelete(patient.name, async () => {
-            const updated = patients.filter((p) => p.id !== patient.id);
-            setPatients(updated);
-            await savePatients(updated);
-
-            if (selected?.id === patient.id) {
-                const next = updated[0] ?? null;
-                setSelected(next);
-                await saveSelectedPatient(next);
-            }
-        });
+        confirmDelete(patient.name, () => deletePatient(patient.id));
     }
 
     function openAdd() {
@@ -207,25 +172,15 @@ function AppHeader({ colors }: { colors: Colors }) {
                     style={[styles.patientCard, { backgroundColor: colors.surface, borderColor: colors.border }]}
                     activeOpacity={0.7}
                 >
-                    {selected && (
-                        <Avatar patient={selected} size={24} />
-                    )}
+                    {selected && <Avatar patient={selected} size={24} />}
 
                     <View style={{ flexShrink: 1 }}>
                         {selected ? (
-                            <Text
-                                style={[styles.patientName, { color: colors.text }]}
-                                numberOfLines={1}
-                                ellipsizeMode="tail"
-                            >
+                            <Text style={[styles.patientName, { color: colors.text }]} numberOfLines={1} ellipsizeMode="tail">
                                 {selected.name}
                             </Text>
                         ) : (
-                            <Text
-                                style={[styles.patientEmpty, { color: colors.textMuted }]}
-                                numberOfLines={1}
-                                ellipsizeMode="tail"
-                            >
+                            <Text style={[styles.patientEmpty, { color: colors.textMuted }]} numberOfLines={1} ellipsizeMode="tail">
                                 Nenhum paciente selecionado
                             </Text>
                         )}
@@ -236,20 +191,11 @@ function AppHeader({ colors }: { colors: Colors }) {
             </View>
 
             {/* SELECTOR */}
-            <Modal
-                visible={selectorOpen}
-                transparent
-                animationType="fade"
-                onRequestClose={() => setSelectorOpen(false)}
-            >
+            <Modal visible={selectorOpen} transparent animationType="fade" onRequestClose={() => setSelectorOpen(false)}>
                 <Pressable style={styles.overlay} onPress={() => setSelectorOpen(false)} />
-
                 <View style={[styles.sheet, { backgroundColor: colors.surface, borderColor: colors.border }]}>
                     <View style={styles.sheetHandle} />
-
-                    <Text style={[styles.sheetTitle, { color: colors.text }]}>
-                        Selecionar paciente
-                    </Text>
+                    <Text style={[styles.sheetTitle, { color: colors.text }]}>Selecionar paciente</Text>
 
                     {patients.length === 0 ? (
                         <Text style={[styles.emptyText, { color: colors.textMuted }]}>
@@ -270,7 +216,6 @@ function AppHeader({ colors }: { colors: Colors }) {
                                     onPress={() => handleSelect(item)}
                                 >
                                     <Avatar patient={item} size={38} />
-
                                     <View style={{ flex: 1 }}>
                                         <Text style={[styles.rowName, { color: colors.text }]} numberOfLines={1} ellipsizeMode="tail">
                                             {item.name}
@@ -279,7 +224,6 @@ function AppHeader({ colors }: { colors: Colors }) {
                                             {item.relation}
                                         </Text>
                                     </View>
-
                                     <TouchableOpacity
                                         onPress={() => openEdit(item)}
                                         hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
@@ -287,7 +231,6 @@ function AppHeader({ colors }: { colors: Colors }) {
                                     >
                                         <Ionicons name="pencil-outline" size={14} color={colors.textMuted} />
                                     </TouchableOpacity>
-
                                     <TouchableOpacity
                                         onPress={() => handleDelete(item)}
                                         hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
@@ -300,37 +243,23 @@ function AppHeader({ colors }: { colors: Colors }) {
                         />
                     )}
 
-                    <TouchableOpacity
-                        style={[styles.addBtn, { borderColor: colors.border }]}
-                        onPress={openAdd}
-                    >
+                    <TouchableOpacity style={[styles.addBtn, { borderColor: colors.border }]} onPress={openAdd}>
                         <Ionicons name="add-circle-outline" size={18} color={colors.text} />
-                        <Text style={[styles.addBtnText, { color: colors.text }]}>
-                            Adicionar paciente
-                        </Text>
+                        <Text style={[styles.addBtnText, { color: colors.text }]}>Adicionar paciente</Text>
                     </TouchableOpacity>
                 </View>
             </Modal>
 
             {/* ADD / EDIT */}
-            <Modal
-                visible={addOpen}
-                transparent
-                animationType="slide"
-                onRequestClose={() => setAddOpen(false)}
-            >
+            <Modal visible={addOpen} transparent animationType="slide" onRequestClose={() => setAddOpen(false)}>
                 <Pressable style={styles.overlay} onPress={() => setAddOpen(false)} />
-
                 <View style={[styles.sheet, { backgroundColor: colors.surface, borderColor: colors.border }]}>
                     <View style={styles.sheetHandle} />
-
                     <Text style={[styles.sheetTitle, { color: colors.text }]}>
                         {editing ? "Editar paciente" : "Novo paciente"}
                     </Text>
 
-                    <Text style={[styles.inputLabel, { color: colors.textMuted }]}>
-                        Nome completo
-                    </Text>
+                    <Text style={[styles.inputLabel, { color: colors.textMuted }]}>Nome completo</Text>
                     <TextInput
                         style={[styles.input, { color: colors.text, borderColor: colors.border, backgroundColor: colors.background }]}
                         placeholder="Maria Aparecida"
@@ -340,9 +269,7 @@ function AppHeader({ colors }: { colors: Colors }) {
                         autoCapitalize="words"
                     />
 
-                    <Text style={[styles.inputLabel, { color: colors.textMuted }]}>
-                        Relação
-                    </Text>
+                    <Text style={[styles.inputLabel, { color: colors.textMuted }]}>Relação</Text>
                     <TextInput
                         style={[styles.input, { color: colors.text, borderColor: colors.border, backgroundColor: colors.background }]}
                         placeholder="Mãe, pai, avó..."
@@ -357,19 +284,14 @@ function AppHeader({ colors }: { colors: Colors }) {
                             style={[styles.cancelBtn, { borderColor: colors.border }]}
                             onPress={() => setAddOpen(false)}
                         >
-                            <Text style={[styles.cancelBtnText, { color: colors.text }]}>
-                                Cancelar
-                            </Text>
+                            <Text style={[styles.cancelBtnText, { color: colors.text }]}>Cancelar</Text>
                         </TouchableOpacity>
-
                         <TouchableOpacity
                             style={[styles.confirmBtn, !newName.trim() && { opacity: 0.4 }]}
                             onPress={editing ? handleSaveEdit : handleAdd}
                             disabled={!newName.trim()}
                         >
-                            <Text style={styles.confirmBtnText}>
-                                {editing ? "Salvar" : "Cadastrar"}
-                            </Text>
+                            <Text style={styles.confirmBtnText}>{editing ? "Salvar" : "Cadastrar"}</Text>
                         </TouchableOpacity>
                     </View>
                 </View>
