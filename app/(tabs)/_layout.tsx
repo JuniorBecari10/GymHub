@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Tabs } from "expo-router";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import {
@@ -16,13 +16,7 @@ import {
 import { Colors, useColors } from "@/hooks/useColors";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { ComponentProps } from "react";
-import {
-    Patient,
-    getPatients,
-    savePatients,
-    getSelectedPatient,
-    saveSelectedPatient,
-} from "@/lib/auth";
+import { Patient } from "@/lib/auth";
 import { PatientProvider, usePatients } from "@/context/PatientContext";
 
 type IoniconsName = ComponentProps<typeof Ionicons>["name"];
@@ -307,7 +301,7 @@ export default function TabLayout() {
         <PatientProvider>
             <Tabs
                 screenOptions={{
-                    tabBarActiveTintColor: colors.tabActive,
+                    tabBarActiveTintColor: colors.teal,
                     header: () => <AppHeader colors={colors} />,
                     tabBarStyle: {
                         backgroundColor: colors.background,

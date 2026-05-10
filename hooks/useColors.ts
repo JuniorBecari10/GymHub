@@ -12,7 +12,7 @@ export function useColors() {
         surface:     isDark ? "#2C2C2E" : "#F2F2F7",
         border:      isDark ? "#38383A" : "#E5E5EA",
         tabActive:   "#68C5DB",
-        teal:        "#68C5DB",
+        teal:        "#0D7C66",
         tabInactive: "#8E8E8F",
     };
 }

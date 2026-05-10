@@ -59,7 +59,7 @@ export default function Profile() {
         setEditing(false);
     }
 
-    
+
     async function handleLogout() {
         if (Platform.OS === "web") {
             const confirmed = window.confirm("Tem certeza que deseja sair?");
@@ -81,6 +81,45 @@ export default function Profile() {
             ]);
         }
     }
+
+    async function handleDeleteAll() {
+        const keys = [
+            "healthlen_users",
+            "healthlen_session",
+            "healthlen_patients",
+            "healthlen_selected_patient",
+            "healthlen_medications",
+            "healthlen_appointments",
+            "healthlen_symptom_logs",
+            "healthlen_day_notes",
+        ];
+
+        async function doDelete() {
+            if (Platform.OS === "web" && typeof window !== "undefined") {
+                keys.forEach((k) => window.localStorage.removeItem(k));
+            } else {
+                const AsyncStorage = (await import("@react-native-async-storage/async-storage")).default;
+                await AsyncStorage.multiRemove(keys);
+            }
+            router.replace("/(auth)/login");
+        }
+
+        if (Platform.OS === "web") {
+            if (window.confirm("Isso apagará todos os dados do app permanentemente. Tem certeza?")) {
+                await doDelete();
+            }
+        } else {
+            Alert.alert(
+                "Apagar todos os dados",
+                "Isso apagará todos os dados do app permanentemente. Esta ação não pode ser desfeita.",
+                [
+                    { text: "Cancelar", style: "cancel" },
+                    { text: "Apagar tudo", style: "destructive", onPress: doDelete },
+                ]
+            );
+        }
+    }
+
     return (
         <ScrollView
             contentContainerStyle={[styles.container, { backgroundColor: colors.background }]}
@@ -153,6 +192,13 @@ export default function Profile() {
                 <Ionicons name="log-out-outline" size={18} color="#E24B4A" />
                 <Text style={styles.btnLogoutText}>Sair da conta</Text>
             </TouchableOpacity>
+            <TouchableOpacity
+                style={[styles.btnLogout, { borderColor: "#E24B4A33", backgroundColor: "#E24B4A0A" }]}
+                onPress={handleDeleteAll}
+            >
+                <Ionicons name="trash-outline" size={18} color="#E24B4A" />
+                <Text style={styles.btnLogoutText}>Apagar todos os dados</Text>
+            </TouchableOpacity>
         </ScrollView>
     );
 }
@@ -189,8 +235,8 @@ function Field({ label, value, editing, onChangeText, colors, keyboardType = "de
 }
 
 const styles = StyleSheet.create({
-    container:      { flexGrow: 1, padding: 24, gap: 16 },
-    avatarSection:  { alignItems: "center", paddingBottom: 24, gap: 6 },
+    container: { flexGrow: 1, padding: 24, gap: 16 },
+    avatarSection: { alignItems: "center", paddingBottom: 24, gap: 6 },
     avatar: {
         width: 72, height: 72,
         borderRadius: 36,
@@ -199,9 +245,9 @@ const styles = StyleSheet.create({
         justifyContent: "center",
         marginBottom: 8,
     },
-    avatarText:     { fontSize: 24, fontWeight: "500", color: "#E1F5EE" },
-    displayName:    { fontSize: 20, fontWeight: "500", letterSpacing: -0.3 },
-    displayEmail:   { fontSize: 14 },
+    avatarText: { fontSize: 24, fontWeight: "500", color: "#E1F5EE" },
+    displayName: { fontSize: 20, fontWeight: "500", letterSpacing: -0.3 },
+    displayEmail: { fontSize: 14 },
     card: {
         borderWidth: 1,
         borderRadius: 16,
@@ -214,7 +260,7 @@ const styles = StyleSheet.create({
         justifyContent: "space-between",
         marginBottom: 4,
     },
-    cardTitle:      { fontSize: 11, textTransform: "uppercase", letterSpacing: 0.15 },
+    cardTitle: { fontSize: 11, textTransform: "uppercase", letterSpacing: 0.15 },
     editBtn: {
         width: 30, height: 30,
         borderRadius: 15,
@@ -222,11 +268,11 @@ const styles = StyleSheet.create({
         alignItems: "center",
         justifyContent: "center",
     },
-    field:          { gap: 5 },
-    fieldLabel:     { fontSize: 12 },
-    fieldValue:     { borderWidth: 1, borderRadius: 10, padding: 12 },
+    field: { gap: 5 },
+    fieldLabel: { fontSize: 12 },
+    fieldValue: { borderWidth: 1, borderRadius: 10, padding: 12 },
     fieldValueText: { fontSize: 15 },
-    fieldInput:     { borderWidth: 1, borderRadius: 10, padding: 12, fontSize: 15 },
+    fieldInput: { borderWidth: 1, borderRadius: 10, padding: 12, fontSize: 15 },
     btnSave: {
         backgroundColor: "#085041",
         borderRadius: 12,
@@ -234,7 +280,7 @@ const styles = StyleSheet.create({
         alignItems: "center",
         marginTop: 4,
     },
-    btnSaveText:    { color: "#E1F5EE", fontSize: 14, fontWeight: "500" },
+    btnSaveText: { color: "#E1F5EE", fontSize: 14, fontWeight: "500" },
     btnLogout: {
         flexDirection: "row",
         alignItems: "center",
@@ -244,5 +290,5 @@ const styles = StyleSheet.create({
         borderRadius: 12,
         padding: 13,
     },
-    btnLogoutText:  { color: "#E24B4A", fontSize: 14 },
+    btnLogoutText: { color: "#E24B4A", fontSize: 14 },
 });
