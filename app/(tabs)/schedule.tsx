@@ -335,7 +335,7 @@ function ApptForm({ initial, onSave, onClose, colors }: {
 
             <ScrollView showsVerticalScrollIndicator={false} style={{ maxHeight: 420 }}>
                 <FormField label="Médico" value={doctorName} onChangeText={setDoctorName} placeholder="Dr. Roberto Fonseca" colors={colors} />
-                <FormField label="Especialidade" value={specialty} onChangeText={setSpecialty} placeholder="Cardiologia" colors={colors} />
+                <FormField label="Especialidade" value={specialty} onChangeText={setSpecialty} placeholder="Cardiologista" colors={colors} />
 
                 <Text style={[styles.formLabel, { color: colors.textMuted }]}>Data</Text>
                 {Platform.OS === "web" ? (
