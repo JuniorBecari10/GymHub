@@ -494,7 +494,7 @@ function QuickBtn({ icon, label, colors, onPress }: {
 // ─── styles ───────────────────────────────────────────────────────────────────
 
 const styles = StyleSheet.create({
-    container: { padding: 16, gap: 10 },
+    container: { padding: 16, gap: 10, marginTop: -16 },
     noPatient: { flex: 1, alignItems: "center", justifyContent: "center", gap: 12 },
     emptyText: { fontSize: 14, textAlign: "center", maxWidth: 260 },
     sectionTitle: { fontSize: 11, fontWeight: "500", letterSpacing: 0.08, marginTop: 6 },

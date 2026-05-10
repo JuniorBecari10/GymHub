@@ -122,7 +122,10 @@ export async function getSymptomLogs(patientId: string): Promise<SymptomLog[]> {
 export async function saveSymptomLog(log: SymptomLog): Promise<void> {
     const raw = await getItem(SYMPTOM_LOGS_KEY);
     const all: SymptomLog[] = raw ? JSON.parse(raw) : [];
-    await setItem(SYMPTOM_LOGS_KEY, JSON.stringify([...all, log]));
+    const idx = all.findIndex((s) => s.id === log.id);
+    if (idx >= 0) all[idx] = log;
+    else all.push(log);
+    await setItem(SYMPTOM_LOGS_KEY, JSON.stringify(all));
 }
 
 export async function deleteSymptomLog(id: string): Promise<void> {
@@ -142,7 +145,10 @@ export async function getDayNotes(patientId: string): Promise<DayNote[]> {
 export async function saveDayNote(note: DayNote): Promise<void> {
     const raw = await getItem(DAY_NOTES_KEY);
     const all: DayNote[] = raw ? JSON.parse(raw) : [];
-    await setItem(DAY_NOTES_KEY, JSON.stringify([...all, note]));
+    const idx = all.findIndex((n) => n.id === note.id);
+    if (idx >= 0) all[idx] = note;
+    else all.push(note);
+    await setItem(DAY_NOTES_KEY, JSON.stringify(all));
 }
 
 export async function deleteDayNote(id: string): Promise<void> {

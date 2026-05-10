@@ -634,6 +634,7 @@ const styles = StyleSheet.create({
     subTabBar: {
         flexDirection: "row",
         margin: 16,
+        marginTop: 0,
         borderRadius: 12,
         borderWidth: 1,
         padding: 3,
